@@ -1,0 +1,38 @@
+
+apply from: project("$gradle.foxCoreName").file("gradle/versions.gradle")
+
+buildscript {
+    repositories {
+        maven {
+            name = 'gradle-plugins'
+            url = 'https://plugins.gradle.org/m2'
+        }
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+        classpath 'gradle.plugin.org.spongepowered:spongegradle:0.7'
+        classpath 'gradle.plugin.org.spongepowered:event-impl-gen:5.0.2'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
+    }
+}
+
+apply plugin: 'org.spongepowered.plugin'
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+group 'net.foxdenstudio.sponge'
+version 'api6-SNAPSHOT'
+
+apply from: project("$gradle.foxCoreName").file("gradle/fox.gradle")
+apply from: project("$gradle.foxCoreName").file("gradle/publish.gradle")
+apply from: project.file("gradle/foxedit.gradle")
+apply from: project("$gradle.foxCoreName").file("gradle/minecraft.gradle")
+
+dependencies {
+    compile project("$gradle.foxCoreName")
+    compile "org.spongepowered:spongeapi:$spongeVersion"
+    //testCompile group: 'junit', name: 'junit', version: '4.11'
+}

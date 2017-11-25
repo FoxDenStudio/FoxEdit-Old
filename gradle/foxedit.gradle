@@ -1,0 +1,66 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            name 'Sponge maven repo'
+            url 'http://repo.spongepowered.org/maven'
+        }
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
+    }
+}
+
+//apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'org.spongepowered.plugin'
+
+publishing{
+    publications {
+        library(MavenPublication) {
+            artifactId = archivesBaseName
+            version = repoVersion
+
+            artifact jar{
+                classifier ''
+            }
+            artifact sourceJar {
+                classifier 'sources'
+            }
+        }
+        download(MavenPublication) {
+            artifactId = archivesBaseName
+
+            artifact serverJar {
+                classifier 'server'
+            }
+        }
+    }
+}
+
+if(System.env.TRAVIS && !Boolean.valueOf(System.env.TRAVIS_PULL_REQUEST)){
+    if(System.env.TRAVIS_TAG){
+        travisPublish.dependsOn ':publishLibraryPublicationToFDSReleasesRepository'
+    } else {
+        travisPublish.dependsOn ':publishLibraryPublicationToFDSSnapshotsRepository'
+    }
+    travisPublish.dependsOn ':publishDownloadPublicationToFDSDownloadsRepository'
+}
+
+//apply plugin: 'org.spongepowered.event-impl-gen'
+
+// Compile time code generator for the event factory
+//genEventImpl {
+//    outputFactory = 'net.foxdenstudio.sponge.foxedit.plugin.event.factory.FGEventFactory'
+//    include 'net/foxdenstudio/sponge/foxedit/plugin/event/'
+//}
+
+task serverJar(type: Jar) {
+    group = 'build'
+    classifier = 'server'
+    from sourceSets.main.output
+//    from tasks.genEventImpl
+}
+
+artifacts {
+    archives serverJar
+}

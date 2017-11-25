@@ -1,0 +1,4 @@
+[submodule "FoxCore"]
+	path = FoxCore
+	url = https://github.com/FoxDenStudio/FoxCore.git
+	branch = api6

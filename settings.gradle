@@ -1,0 +1,11 @@
+rootProject.name = 'FoxEdit'
+
+apply from: 'gradle/devenv.gradle'
+
+if (gradle.isDevEnv) {
+    includeFlat "$gradle.foxCorePath"
+    gradle.ext.foxCoreName = ':' + "$gradle.foxCorePath"
+} else {
+    include 'FoxCore'
+    gradle.ext.foxCoreName = ':FoxCore'
+}
